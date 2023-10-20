@@ -7,15 +7,16 @@ public class BackgroundMovement : MonoBehaviour
     [SerializeField] private Vector3 movementSpeed;
     private Vector2 offset;
     private Material material;
-
+    private Rigidbody2D playerRB;
     private void Awake()
     {
         material = GetComponent<SpriteRenderer>().material;
+        playerRB = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
-        offset = movementSpeed * Time.deltaTime;
+        offset = (playerRB.velocity.x * 0.1f) * movementSpeed * Time.deltaTime;
         material.mainTextureOffset += offset;
     }
 }
