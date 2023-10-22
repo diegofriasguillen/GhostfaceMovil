@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - NPC
   layers:
   - Default
   - TransparentFX
@@ -12,8 +13,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - NPC
+  - wallLayer
   - 
   - 
   - 
@@ -45,6 +46,12 @@ TagManager:
   - name: Background
     uniqueID: 3878065865
     locked: 0
+  - name: NPCgirl
+    uniqueID: 4221255229
+    locked: 0
   - name: Ghostface
     uniqueID: 2699392313
+    locked: 0
+  - name: Upgrade
+    uniqueID: 4032490875
     locked: 0
