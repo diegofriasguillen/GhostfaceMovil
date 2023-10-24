@@ -16,6 +16,10 @@ public class Ghostface : MonoBehaviour
     public Slider speedPowerUpSlider;
     public GameObject speedPowerUpSliderObject;
 
+    //DashUI
+    public Slider dashPowerUpSlider;
+    public GameObject dashPowerUpSliderObject;
+
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
     private bool isJumping = false;
@@ -37,6 +41,14 @@ public class Ghostface : MonoBehaviour
     public float wallJumpForce = 7f;
 
     public bool isImmortal = false;
+
+    //Dash
+    public float dashSpeed = 5;
+    public float dashDuration = 0.1f;
+    private bool isDashing = false;
+    public bool hasDashPowerUp = false;
+    public float dashPowerUpDuration = 10f;
+    private float dashPowerUpTimeRemaining = 0f;
 
     public GameObject loseCanvas;
 
@@ -91,6 +103,12 @@ public class Ghostface : MonoBehaviour
                 Jump();
             }
         }
+
+        //Dash 
+        if (Input.GetKeyDown(KeyCode.E) && !isDashing && hasDashPowerUp)
+        {
+            StartCoroutine(DoDash());
+        }
     }
 
     //SpeedStuff
@@ -119,6 +137,53 @@ public class Ghostface : MonoBehaviour
     }
 
     //Here ends speed stuff
+
+    //Dash 
+    public void ActivateDash()
+    {
+        dashPowerUpTimeRemaining = 10f;
+        dashPowerUpSliderObject.SetActive(true);
+        dashPowerUpSlider.maxValue = dashPowerUpTimeRemaining;
+        dashPowerUpSlider.value = dashPowerUpTimeRemaining;
+
+        if (!hasDashPowerUp)
+        {
+            hasDashPowerUp = true;
+            StartCoroutine(DashPowerUpCountdown());
+        }
+
+        StartCoroutine(UpdateDashPowerUp());
+    }
+    private IEnumerator UpdateDashPowerUp()
+    {
+        while (dashPowerUpTimeRemaining > 0)
+        {
+            dashPowerUpTimeRemaining -= Time.deltaTime;
+            dashPowerUpSlider.value = dashPowerUpTimeRemaining;
+            yield return null;
+        }
+    }
+    private IEnumerator DashPowerUpCountdown()
+    {
+        yield return new WaitForSeconds(dashPowerUpDuration);
+        hasDashPowerUp = false;
+        dashPowerUpSliderObject.SetActive(false);
+    }
+    private IEnumerator DoDash()
+    {
+        float dashEndTime = Time.time + dashDuration;
+        isDashing = true;
+
+
+        while (Time.time < dashEndTime)
+        {
+            rb.velocity = new Vector2(dashSpeed * transform.localScale.x, rb.velocity.y);
+            yield return null;
+        }
+
+        dashPowerUpTimeRemaining -= dashDuration;
+        isDashing = false;
+    }
 
     public void TakeDamage(int damage)
     {

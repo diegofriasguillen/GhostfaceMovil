@@ -49,6 +49,9 @@ TagManager:
   - name: NPCgirl
     uniqueID: 4221255229
     locked: 0
+  - name: Police
+    uniqueID: 3278362701
+    locked: 0
   - name: Ghostface
     uniqueID: 2699392313
     locked: 0

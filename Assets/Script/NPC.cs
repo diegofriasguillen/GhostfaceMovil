@@ -16,6 +16,11 @@ public class NPC : MonoBehaviour
 
     private bool isDead = false;
 
+    //Dash 
+    public GameObject dashPowerUpPrefab;
+    public float dashPowerUpChance = 0.2f;
+
+
     public void Start()
     {
         anim = GetComponent<Animator>();
@@ -42,16 +47,25 @@ public class NPC : MonoBehaviour
             collider.enabled = false;
         }
 
+        //Run upgrade
         if (Random.value <= powerUpChance)
         {
             Vector3 spawnPosition = transform.position + powerUpOffset;
             Instantiate(powerUpPrefab, spawnPosition, Quaternion.identity);
         }
 
+        //Inmortality
         if (Random.value <= 0f)
         {
             Vector3 spawnPosition = transform.position + powerUpOffset;
             Instantiate(inmortalityPowerUpPrefab, spawnPosition, Quaternion.identity);
+        }
+
+        //Dash 
+        if(Random.value <= dashPowerUpChance)
+        {
+            Vector3 spawnPosition = transform.position + powerUpOffset;
+            Instantiate(dashPowerUpPrefab, spawnPosition, Quaternion.identity);
         }
     }
 }
