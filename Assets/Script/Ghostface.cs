@@ -275,6 +275,12 @@ public class Ghostface : MonoBehaviour
         {
             npc.GetComponent<NPC>().TakeDamage(attackDamage);
         }
+
+        Collider2D[] hitPoliceOfficers = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Police"));
+        foreach (Collider2D officer in hitPoliceOfficers)
+        {
+            officer.GetComponent<PoliceOfficer>().TakeDamage(attackDamage);
+        }
     }
 
     void Die()

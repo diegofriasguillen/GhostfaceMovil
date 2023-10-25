@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 88ef604ae57399d45a7e452139165d07
+guid: 366b59e42732a5141b61b2b8b7e5256a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Life_0
+      name: Bullet_0
       rect:
         serializedVersion: 2
-        x: 18
-        y: 11
-        width: 27
-        height: 37
+        x: 5
+        y: 13
+        width: 21
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,8 +150,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 72c8dfc35b98ffd4aaa9e398c6f21ca1
-      internalID: -624604096
+      spriteID: ce9a2d1d025a59d4e841428f57a9c59b
+      internalID: -398625457
       vertices: []
       indices: 
       edges: []
@@ -167,7 +167,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Life_0: -1573540565
+      Bullet_0: -398625457
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

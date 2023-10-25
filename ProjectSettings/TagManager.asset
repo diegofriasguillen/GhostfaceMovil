@@ -15,8 +15,8 @@ TagManager:
   - UI
   - NPC
   - wallLayer
-  - 
-  - 
+  - Police
+  - Ghostface
   - 
   - 
   - 
@@ -51,6 +51,9 @@ TagManager:
     locked: 0
   - name: Police
     uniqueID: 3278362701
+    locked: 0
+  - name: Bullet
+    uniqueID: 2963892037
     locked: 0
   - name: Ghostface
     uniqueID: 2699392313
