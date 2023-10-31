@@ -55,6 +55,9 @@ TagManager:
   - name: Bullet
     uniqueID: 2963892037
     locked: 0
+  - name: Obstacle
+    uniqueID: 1219882169
+    locked: 0
   - name: Ghostface
     uniqueID: 2699392313
     locked: 0
