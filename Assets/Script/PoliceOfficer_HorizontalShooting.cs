@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoliceOfficer : MonoBehaviour
+public class PoliceOfficer_HorizontalShooting : MonoBehaviour
 {
     public Transform shootingPoint;
     public GameObject bulletPrefab;
     public float shootingRange = 5f;
-    public float shootingInterval = 1f;
+    public float shootingInterval = 5f;
     private Animator animator;
     private bool isShooting = false;
 
@@ -17,6 +17,8 @@ public class PoliceOfficer : MonoBehaviour
     //Extralife
     public GameObject lifeExtraPrefab;
     public int dropProbability = 100;
+    public Vector3 powerUpOffset = new Vector3(1f, 0, 0);
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -24,7 +26,7 @@ public class PoliceOfficer : MonoBehaviour
 
     private void Update()
     {
-        if(!isAlive)
+        if (!isAlive)
         {
             return;
         }
@@ -35,6 +37,7 @@ public class PoliceOfficer : MonoBehaviour
         {
             StartCoroutine(Shoot(ghostfaceCollider.transform));
         }
+
     }
 
     private IEnumerator Shoot(Transform targetTransform)
@@ -42,7 +45,7 @@ public class PoliceOfficer : MonoBehaviour
         isShooting = true;
         animator.SetTrigger("StartShooting");
 
-        Vector2 direction = (targetTransform.position - shootingPoint.position).normalized;
+        Vector2 direction = new Vector2 (-1,0);
 
         Bullet bullet = Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity).GetComponent<Bullet>();
         bullet.SetDirection(direction);
@@ -51,19 +54,19 @@ public class PoliceOfficer : MonoBehaviour
         animator.ResetTrigger("StartShooting");
         isShooting = false;
 
-        
+
     }
 
     public void TakeDamage(int damageAmount)
     {
-        if(!isAlive)
+        if (!isAlive)
         {
             return;
         }
 
         policeLives -= damageAmount;
 
-        if(policeLives <= 0)
+        if (policeLives <= 0)
         {
             Die();
         }
@@ -78,10 +81,11 @@ public class PoliceOfficer : MonoBehaviour
         GetComponent<Collider2D>().isTrigger = true;
 
         //Extralife
-        int randomChance = Random.Range(1, 101); 
-        if (randomChance <= dropProbability) 
+        int randomChance = Random.Range(1, 101);
+        if (randomChance <= dropProbability)
         {
-            Instantiate(lifeExtraPrefab, transform.position, Quaternion.identity); 
+            Vector3 spawnPosition = transform.position + powerUpOffset;
+            Instantiate(lifeExtraPrefab, spawnPosition, Quaternion.identity);
         }
     }
 

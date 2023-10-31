@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Ghostface : MonoBehaviour
@@ -31,13 +32,13 @@ public class Ghostface : MonoBehaviour
     public Transform attackPoint;
     public float attackRange = 1f;
 
-    public int maxJumps = 2;
+    public int maxJumps = 1;
     private int currentJumps;
 
     public LayerMask wallLayer;
     public float wallRayDistance = 0.6f;
     private bool touchingWall;
-    private bool wallJumping;
+    //private bool wallJumping;
     public float wallJumpForce = 7f;
 
     public bool isImmortal = false;
@@ -50,7 +51,21 @@ public class Ghostface : MonoBehaviour
     public float dashPowerUpDuration = 10f;
     private float dashPowerUpTimeRemaining = 0f;
 
+    //WallJump
+    private bool canWallJump = false;
+    //WallSlide
+    private bool isWallSliding = false;
+    public float wallSlideSpeed = 2.0f;
+
+    //Jump si está la tecla presionada mucho time
+    private bool isHoldingJump = false;
+    private float jumpHoldTime = 0.0f;
+    private float maxJumpHoldTime = 0.5f;
+    public bool hasDoubleJump = false;
+
+
     public GameObject loseCanvas;
+
 
 
     private void Start()
@@ -58,15 +73,18 @@ public class Ghostface : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentJumps = maxJumps;
+
     }
 
     private void Update()
     {
+
         float moveX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2 (moveX * moveSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(moveX * moveSpeed, rb.velocity.y);
         anim.SetFloat("Speed", Mathf.Abs(moveX));
 
-        if(moveX > 0)
+
+        if (moveX > 0)
         {
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
@@ -75,14 +93,22 @@ public class Ghostface : MonoBehaviour
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }
 
-        if(Input.GetButtonDown("Jump") && !isJumping)
+
+        if (Input.GetButtonDown("Jump") && !isJumping)
         {
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             isJumping = true;
             anim.SetBool("Jumping", true);
+            isHoldingJump = true;
+            jumpHoldTime = Time.time;
         }
 
-        if(Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Jump") && isHoldingJump && Time.time - jumpHoldTime < maxJumpHoldTime)
+        {
+            Jump();
+        }
+
+        if (Input.GetButtonDown("Fire1"))
         {
             Attack();
             anim.SetTrigger("Kill");
@@ -90,7 +116,10 @@ public class Ghostface : MonoBehaviour
 
         //Wall Jumping bug need to fix jeje
 
-        touchingWall = Physics2D.Raycast(transform.position, Vector2.right * transform.localScale.x, wallRayDistance, wallLayer);
+        touchingWall = Physics2D.Raycast(transform.position, Vector2.right * transform.localScale.x, wallRayDistance, wallLayer) ||
+                        Physics2D.Raycast(transform.position, Vector2.up, wallRayDistance, wallLayer);
+
+
 
         if (Input.GetButtonDown("Jump") && (currentJumps > 0 || touchingWall))
         {
@@ -104,12 +133,42 @@ public class Ghostface : MonoBehaviour
             }
         }
 
+        if (Input.GetButtonDown("Jump"))
+        {
+
+            if (currentJumps > 0 && !isWallSliding)
+            {
+                Jump();
+            }
+            else if (isWallSliding)
+            {
+                WallSlideJump();
+            }
+            else if (hasDoubleJump && !isJumping && (currentJumps > 0 || touchingWall))
+            {
+                DoubleJump();
+            }
+        }
+
         //Dash 
         if (Input.GetKeyDown(KeyCode.E) && !isDashing && hasDashPowerUp)
         {
             StartCoroutine(DoDash());
         }
+
+        //WallSlide
+        if (touchingWall && !isJumping && rb.velocity.y < 0)
+        {
+            isWallSliding = true;
+            isJumping = false;
+            anim.SetBool("Jumping", false);
+        }
+        else
+        {
+            isWallSliding = false;
+        }
     }
+
 
     //SpeedStuff
     public void ActivateSpeedPowerUp()
@@ -122,18 +181,18 @@ public class Ghostface : MonoBehaviour
     {
         float elapsedTime = 0f;
 
-        speedPowerUpSliderObject.SetActive(true);  // Mostrar el slider
+        speedPowerUpSliderObject.SetActive(true);
         speedPowerUpSlider.value = speedPowerUpSlider.maxValue;
 
         while (elapsedTime < speedPowerUpSlider.maxValue)
         {
             elapsedTime += Time.deltaTime;
-            speedPowerUpSlider.value = speedPowerUpSlider.maxValue - elapsedTime;  // Actualizar el slider
+            speedPowerUpSlider.value = speedPowerUpSlider.maxValue - elapsedTime;
             yield return null;
         }
 
-        moveSpeed /= 2;  // Restaurar la velocidad original
-        speedPowerUpSliderObject.SetActive(false);  // Ocultar el slider
+        moveSpeed /= 2;
+        speedPowerUpSliderObject.SetActive(false);
     }
 
     //Here ends speed stuff
@@ -187,19 +246,19 @@ public class Ghostface : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if(isImmortal)
+        if (isImmortal)
         {
             return;
         }
 
         lives -= damage;
 
-        if(lives >=0)
+        if (lives >= 0)
         {
             lifeIcons[lives].SetActive(false);
         }
 
-        if(lives <=0)
+        if (lives <= 0)
         {
             Die();
         }
@@ -213,9 +272,9 @@ public class Ghostface : MonoBehaviour
         {
             isJumping = false;
             anim.SetBool("Jumping", false);
+            currentJumps = maxJumps;
         }
 
-        currentJumps = maxJumps;
     }
 
     //ImmortalStuff
@@ -236,7 +295,7 @@ public class Ghostface : MonoBehaviour
 
     private IEnumerator UpdatePowerUpCountdown()
     {
-        while(powerUpSlider.value > 0)
+        while (powerUpSlider.value > 0)
         {
             powerUpSlider.value -= Time.deltaTime;
             yield return null;
@@ -254,18 +313,59 @@ public class Ghostface : MonoBehaviour
     void Jump()
     {
         rb.velocity = new Vector2(rb.velocity.x, 0f);
-        rb.AddForce(new Vector2(0f,jumpForce ), ForceMode2D.Impulse);
-        isJumping=true;
+        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+        isJumping = true;
         anim.SetBool("Jumping", true);
         currentJumps--;
     }
 
+    void DoubleJump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+        isJumping = true;
+        anim.SetBool("Jumping", true);
+        hasDoubleJump = false;
+    }
+
+    public void EnableDoubleJump()
+    {
+        hasDoubleJump = true;
+    }
+
+    //WallJump
+    public void EnableWallJump()
+    {
+        canWallJump = true;
+    }
+
     void WallJump()
     {
-        rb.velocity = new Vector2(0f, 0f);
+
+        if (canWallJump && (currentJumps > 0 || touchingWall))
+        {
+            rb.velocity = new Vector2(0f, 0f);
+            Vector2 jumpDirection = new Vector2(-transform.localScale.x, 1).normalized;
+            rb.AddForce(jumpDirection * wallJumpForce, ForceMode2D.Impulse);
+            //wallJumping = true;
+        }
+    }
+
+    //Wallslide
+    private void FixedUpdate()
+    {
+        if (isWallSliding)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+        }
+    }
+
+    void WallSlideJump()
+    {
         Vector2 jumpDirection = new Vector2(-transform.localScale.x, 1).normalized;
+        rb.velocity = Vector2.zero;
         rb.AddForce(jumpDirection * wallJumpForce, ForceMode2D.Impulse);
-        wallJumping = true;
+        currentJumps--;
     }
 
     void Attack()
@@ -276,10 +376,34 @@ public class Ghostface : MonoBehaviour
             npc.GetComponent<NPC>().TakeDamage(attackDamage);
         }
 
+
         Collider2D[] hitPoliceOfficers = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Police"));
         foreach (Collider2D officer in hitPoliceOfficers)
         {
-            officer.GetComponent<PoliceOfficer>().TakeDamage(attackDamage);
+            PoliceOfficer policeOfficer = officer.GetComponent<PoliceOfficer>();
+            if (policeOfficer != null)
+            {
+                policeOfficer.TakeDamage(attackDamage);
+            }
+
+            PoliceOfficer_HorizontalShooting horizontalShootingOfficer = officer.GetComponent<PoliceOfficer_HorizontalShooting>();
+            if (horizontalShootingOfficer != null)
+            {
+                horizontalShootingOfficer.TakeDamage(attackDamage);
+            }
+        }
+    } 
+
+    //Extralife
+    public void AddLife()
+    {
+        if (lives < 5) 
+        {
+            lives++;
+            if (lives <= lifeIcons.Length)
+            {
+                lifeIcons[lives - 1].SetActive(true); 
+            }
         }
     }
 

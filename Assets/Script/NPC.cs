@@ -55,7 +55,7 @@ public class NPC : MonoBehaviour
         }
 
         //Inmortality
-        if (Random.value <= 0f)
+        if (Random.value <= 1f)
         {
             Vector3 spawnPosition = transform.position + powerUpOffset;
             Instantiate(inmortalityPowerUpPrefab, spawnPosition, Quaternion.identity);

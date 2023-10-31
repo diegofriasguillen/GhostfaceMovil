@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7b5dd5d801de1bd48ba9f0edfd0aca0e
+guid: 26be3ad9b63ec4440a3b282d2a26e396
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -81,6 +81,19 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -123,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Exit2_0
+      name: Pause3_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 9
-        width: 50
-        height: 23
+        x: 5
+        y: 5
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,8 +150,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3477d89174c3ef4499812a155e6d9d17
-      internalID: -1339241984
+      spriteID: c5d2e9d858de0804c81dbd6a3f26e027
+      internalID: 379479094
       vertices: []
       indices: 
       edges: []
@@ -154,7 +167,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Exit2_0: -1339241984
+      Pause3_0: 379479094
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
