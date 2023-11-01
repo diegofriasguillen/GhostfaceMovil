@@ -63,6 +63,10 @@ public class Ghostface : MonoBehaviour
     private float maxJumpHoldTime = 0.5f;
     public bool hasDoubleJump = false;
 
+    //CoyoteTime
+    private float coyoteTime = 0.1f;
+    private float coyoteTimeCounter;
+
 
     public GameObject loseCanvas;
 
@@ -147,6 +151,16 @@ public class Ghostface : MonoBehaviour
             else if (hasDoubleJump && !isJumping && (currentJumps > 0 || touchingWall))
             {
                 DoubleJump();
+            }
+        }
+
+        //CoyoteTime
+        if (!isJumping && coyoteTimeCounter > 0)
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+            if (Input.GetButtonDown("Jump"))
+            {
+                Jump();
             }
         }
 
@@ -273,6 +287,7 @@ public class Ghostface : MonoBehaviour
             isJumping = false;
             anim.SetBool("Jumping", false);
             currentJumps = maxJumps;
+            coyoteTimeCounter = coyoteTime;
         }
 
     }
