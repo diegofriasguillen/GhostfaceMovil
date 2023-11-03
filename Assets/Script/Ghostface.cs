@@ -72,9 +72,10 @@ public class Ghostface : MonoBehaviour
     public GameObject Level1;
     public GameObject Level2;
     public Transform RespawnPoint;
-    public Camera mainCamera;
+    public GameObject camerasObjectLevel1;
+    public GameObject camerasObjectLevel2;
 
-
+        
     public GameObject loseCanvas;
 
 
@@ -85,6 +86,8 @@ public class Ghostface : MonoBehaviour
         anim = GetComponent<Animator>();
         currentJumps = maxJumps;
 
+        camerasObjectLevel1.SetActive(true);
+        camerasObjectLevel2.SetActive(false);
         Level1.SetActive(true);
         Level2.SetActive(false);
 
@@ -304,12 +307,21 @@ public class Ghostface : MonoBehaviour
 
         if (collision.gameObject.name == "meta")
         {
+            //Level1.SetActive(false);
+            //Level2.SetActive(true);
+            //transform.position = RespawnPoint.position;
+
+            //mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
+            //mainCamera.transform.Translate(0, 2, 0);
+
+            camerasObjectLevel1.SetActive(false);
+            camerasObjectLevel2.SetActive(true);
+
             Level1.SetActive(false);
             Level2.SetActive(true);
+
             transform.position = RespawnPoint.position;
 
-            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
-            mainCamera.transform.Translate(0, 2, 0);
         }
 
 

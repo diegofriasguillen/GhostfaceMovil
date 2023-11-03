@@ -8,12 +8,9 @@ public class Patrol : MonoBehaviour
     public float speed = 2.0f;
     private bool reachedTarget = false;
     private bool canMove = false;
-    private Animator animator;
-    private bool hasChangedAnimation = false;
 
     void Start()
     {
-        animator = GetComponent<Animator>();
         StartCoroutine(StartMovementDelay());
     }
 
@@ -26,8 +23,6 @@ public class Patrol : MonoBehaviour
             if (transform.position == target.position)
             {
                 reachedTarget = true;
-                animator.SetBool("HasReachedTarget", true);
-                hasChangedAnimation = true;
             }
         }
     }
@@ -47,6 +42,14 @@ public class Patrol : MonoBehaviour
             {
                 player.TakeDamage(2);
             }
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (reachedTarget)
+        {
+            Destroy(gameObject);
         }
     }
 }
