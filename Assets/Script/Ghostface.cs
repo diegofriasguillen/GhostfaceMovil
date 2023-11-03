@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,6 +68,12 @@ public class Ghostface : MonoBehaviour
     private float coyoteTime = 0.1f;
     private float coyoteTimeCounter;
 
+    //ChangingLvels
+    public GameObject Level1;
+    public GameObject Level2;
+    public Transform RespawnPoint;
+    public Camera mainCamera;
+
 
     public GameObject loseCanvas;
 
@@ -77,6 +84,9 @@ public class Ghostface : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentJumps = maxJumps;
+
+        Level1.SetActive(true);
+        Level2.SetActive(false);
 
     }
 
@@ -288,7 +298,21 @@ public class Ghostface : MonoBehaviour
             anim.SetBool("Jumping", false);
             currentJumps = maxJumps;
             coyoteTimeCounter = coyoteTime;
+
+
         }
+
+        if (collision.gameObject.name == "meta")
+        {
+            Level1.SetActive(false);
+            Level2.SetActive(true);
+            transform.position = RespawnPoint.position;
+
+            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
+            mainCamera.transform.Translate(0, 2, 0);
+        }
+
+
 
     }
 
@@ -407,17 +431,17 @@ public class Ghostface : MonoBehaviour
                 horizontalShootingOfficer.TakeDamage(attackDamage);
             }
         }
-    } 
+    }
 
     //Extralife
     public void AddLife()
     {
-        if (lives < 5) 
+        if (lives < 5)
         {
             lives++;
             if (lives <= lifeIcons.Length)
             {
-                lifeIcons[lives - 1].SetActive(true); 
+                lifeIcons[lives - 1].SetActive(true);
             }
         }
     }
