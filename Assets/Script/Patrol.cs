@@ -8,6 +8,7 @@ public class Patrol : MonoBehaviour
     public float speed = 2.0f;
     private bool reachedTarget = false;
     private bool canMove = false;
+    public float startDelay = 6f;
 
     void Start()
     {
@@ -29,7 +30,7 @@ public class Patrol : MonoBehaviour
 
     IEnumerator StartMovementDelay()
     {
-        yield return new WaitForSeconds(6f);
+        yield return new WaitForSeconds(startDelay);
         canMove = true;
     }
 

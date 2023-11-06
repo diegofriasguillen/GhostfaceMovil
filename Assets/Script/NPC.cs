@@ -7,10 +7,9 @@ public class NPC : MonoBehaviour
     public int health = 1;
     public Animator anim;
 
+    //Speed
     public GameObject powerUpPrefab;
     public float powerUpChance = 0.5f;
-
-    public GameObject inmortalityPowerUpPrefab;
 
     public Vector3 powerUpOffset = new Vector3 (1f, 0, 0);
 
@@ -18,7 +17,11 @@ public class NPC : MonoBehaviour
 
     //Dash 
     public GameObject dashPowerUpPrefab;
-    public float dashPowerUpChance = 0.2f;
+    public float dashPowerUpChance = 0.3f;
+
+    //Immortality
+    public float immortalityPowerUpChance = 0.1f;
+    public GameObject inmortalityPowerUpPrefab;
 
 
     public void Start()
@@ -55,7 +58,7 @@ public class NPC : MonoBehaviour
         }
 
         //Inmortality
-        if (Random.value <= 1f)
+        if (Random.value <= immortalityPowerUpChance)
         {
             Vector3 spawnPosition = transform.position + powerUpOffset;
             Instantiate(inmortalityPowerUpPrefab, spawnPosition, Quaternion.identity);
