@@ -307,12 +307,6 @@ public class Ghostface : MonoBehaviour
 
         if (collision.gameObject.name == "meta")
         {
-            //Level1.SetActive(false);
-            //Level2.SetActive(true);
-            //transform.position = RespawnPoint.position;
-
-            //mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
-            //mainCamera.transform.Translate(0, 2, 0);
 
             camerasObjectLevel1.SetActive(false);
             camerasObjectLevel2.SetActive(true);
@@ -441,6 +435,16 @@ public class Ghostface : MonoBehaviour
             if (horizontalShootingOfficer != null)
             {
                 horizontalShootingOfficer.TakeDamage(attackDamage);
+            }
+        }
+
+        Collider2D[] hitFootballPlayers = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("FootballPlayer"));
+        foreach (Collider2D player in hitFootballPlayers)
+        {
+            FootballPlayer footballPlayer = player.GetComponent<FootballPlayer>();
+            if (footballPlayer != null)
+            {
+                footballPlayer.TakeDamage(attackDamage);
             }
         }
     }

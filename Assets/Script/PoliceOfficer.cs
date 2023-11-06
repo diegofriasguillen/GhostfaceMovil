@@ -17,6 +17,7 @@ public class PoliceOfficer : MonoBehaviour
     //Extralife
     public GameObject lifeExtraPrefab;
     public int dropProbability = 100;
+    public Vector3 powerUpOffset = new Vector3(1f, 0, 0);
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -81,7 +82,8 @@ public class PoliceOfficer : MonoBehaviour
         int randomChance = Random.Range(1, 101); 
         if (randomChance <= dropProbability) 
         {
-            Instantiate(lifeExtraPrefab, transform.position, Quaternion.identity); 
+            Vector3 spawnPosition = transform.position + powerUpOffset;
+            Instantiate(lifeExtraPrefab, spawnPosition, Quaternion.identity);
         }
     }
 
