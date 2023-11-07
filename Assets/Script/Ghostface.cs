@@ -75,6 +75,9 @@ public class Ghostface : MonoBehaviour
     public GameObject camerasObjectLevel1;
     public GameObject camerasObjectLevel2;
 
+    //DoubleDamage
+    private bool hasDoubleDamage = false;
+
         
     public GameObject loseCanvas;
 
@@ -224,6 +227,19 @@ public class Ghostface : MonoBehaviour
 
     //Here ends speed stuff
 
+    //DoubleDamage
+    public void ActivateDoubleDamage()
+    {
+        hasDoubleDamage = true;
+        StartCoroutine(EndDoubleDamage());
+    }
+
+    private IEnumerator EndDoubleDamage()
+    {
+        yield return new WaitForSeconds(10f);
+        hasDoubleDamage = false;
+    }
+
     //Dash 
     public void ActivateDash()
     {
@@ -270,6 +286,8 @@ public class Ghostface : MonoBehaviour
         dashPowerUpTimeRemaining -= dashDuration;
         isDashing = false;
     }
+
+    //TakeDamage
 
     public void TakeDamage(int damage)
     {
@@ -413,14 +431,18 @@ public class Ghostface : MonoBehaviour
         currentJumps--;
     }
 
+    //AtaqueeeeeFuaaa
     void Attack()
     {
         Collider2D[] hitNPCs = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, npcLayers);
         foreach (Collider2D npc in hitNPCs)
         {
             npc.GetComponent<NPC>().TakeDamage(attackDamage);
-        }
 
+            // DamagePowerUP for NPCs
+            int damageNPC = hasDoubleDamage ? 2 * attackDamage : attackDamage;
+            npc.GetComponent<NPC>().TakeDamage(damageNPC);
+        }
 
         Collider2D[] hitPoliceOfficers = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Police"));
         foreach (Collider2D officer in hitPoliceOfficers)
@@ -429,12 +451,20 @@ public class Ghostface : MonoBehaviour
             if (policeOfficer != null)
             {
                 policeOfficer.TakeDamage(attackDamage);
+
+                // DamagePowerUP for PoliceOfficer
+                int damage = hasDoubleDamage ? 2 * attackDamage : attackDamage;
+                policeOfficer.TakeDamage(damage);
             }
 
             PoliceOfficer_HorizontalShooting horizontalShootingOfficer = officer.GetComponent<PoliceOfficer_HorizontalShooting>();
             if (horizontalShootingOfficer != null)
             {
                 horizontalShootingOfficer.TakeDamage(attackDamage);
+
+                // DamagePowerUP for PoliceOfficer_HorizontalShooting
+                int damage = hasDoubleDamage ? 2 * attackDamage : attackDamage;
+                horizontalShootingOfficer.TakeDamage(damage);
             }
         }
 
@@ -445,6 +475,10 @@ public class Ghostface : MonoBehaviour
             if (footballPlayer != null)
             {
                 footballPlayer.TakeDamage(attackDamage);
+
+                // DamagePowerUP for FootballPlayer
+                int damage = hasDoubleDamage ? 2 * attackDamage : attackDamage;
+                footballPlayer.TakeDamage(damage);
             }
         }
     }

@@ -10,8 +10,16 @@ public class Patrol : MonoBehaviour
     private bool canMove = false;
     public float startDelay = 6f;
 
+    //sounnnd
+    public AudioSource audioSource;
+    public float maxVolume = 0.006f;
+    public float minVolume = 0.001f;
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>(); 
+        audioSource.volume = minVolume; 
+
         StartCoroutine(StartMovementDelay());
     }
 
@@ -25,6 +33,10 @@ public class Patrol : MonoBehaviour
             {
                 reachedTarget = true;
             }
+
+            float distance = Vector2.Distance(transform.position, target.position);
+            float newVolume = Mathf.Lerp(minVolume, maxVolume, 1 - (distance / 10));
+            audioSource.volume = newVolume;
         }
     }
 
@@ -51,6 +63,13 @@ public class Patrol : MonoBehaviour
         if (reachedTarget)
         {
             Destroy(gameObject);
+            audioSource.enabled = false;
         }
     }
+
+    //private void OnDisable()
+    //{
+    //    audioSource.Stop();
+    //    audioSource.enabled = false;
+    //}
 }
